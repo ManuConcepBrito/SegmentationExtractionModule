@@ -419,6 +419,22 @@ class SegmentationExtractionModuleLogic(ScriptedLoadableModuleLogic):
 
   def clear_scene(self):
     slicer.mrmlScene.Clear(0)
+    
+  def get_segmentation_node(self):
+    self.segmentation_node = slicer.util.getNodesByClass('vtkMRMLSegmentationNode')
+    self.segmentation = self.segmentation_node.GetSegmentation()
+
+  def get_segmention_names(self):
+      self.segmentation_names = [self.segmentation.GetNthSegment(ii).GetName()
+                                 for ii in range(self.segmentation.GetNumberOfSegments())]
+  def get_segmentation_objects(self):
+      self.segmentation_objects = [self.segmentation().GetSegment(name)
+                                   for name in self.segmentation_names]
+  def get_segmentation_dict(self):
+      self.segmentations_dict = {seg_names: seg_object for (seg_names, seg_object) in
+                                 zip(self.segmentation_names, self.segmentation_objects)}
+
+      # names = [a.GetNthSegment(i).GetName() for i in range(a.GetNumberOfSegments)]
 
 
 
